@@ -21,19 +21,30 @@ fn main() {
             }
         }
     }
-
-    let mut acc = calories[0].clone();
     
     let mut calories_per_elf = calories
-                                    .iter()
-                                    .map(|x| {x.iter().sum()})
-                                    .collect::<Vec<i32>>();
+                                        .clone()
+                                        .iter()
+                                        .map(|x| {x.iter().sum()})
+                                        .collect::<Vec<i32>>();
         
-    let mut part_1_ans = calories_per_elf.clone().iter().max();
+    let part_1_ans = *calories_per_elf
+                                        .clone()
+                                        .iter()
+                                        .max()
+                                        .unwrap();
 
-    let mut part_2_ans = calories_per_elf.sort();
-    let sum: i32 = calories[0].clone().iter().sum();
 
+    calories_per_elf.sort_by(|a, b| b.cmp(a));
+
+    let part_2_ans: i32 = calories_per_elf[0..3]
+                                    .to_vec()
+                                    .iter()
+                                    .sum();
+
+
+    println!("Part 1 ans: {}", part_1_ans);
+    println!("Part 2 ans: {}", part_2_ans);
 }
 
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
