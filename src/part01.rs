@@ -5,7 +5,7 @@ pub fn run_part_01() {
     let mut _elf_calories: Vec<i32> = Vec::new();
 
     // Build a vector of elf vector calories
-    if let Ok(lines) = utility::read_lines("./src/prob01.txt") {
+    if let Ok(lines) = utility::read_lines("./src/problems/prob01.txt") {
         for line in lines {
             if let Ok(ip) = line {
                 if ip.is_empty() {
