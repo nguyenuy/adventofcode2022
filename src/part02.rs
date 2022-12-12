@@ -1,45 +1,124 @@
 use crate::utility;
 
 pub fn run_part_02a() {
-    let mut calories: Vec<Vec<i32>> = Vec::new(); 
-    let mut _elf_calories: Vec<i32> = Vec::new();
+    println!("Running Day 02 - Part A");
+    let mut opponent_choice: Vec<char> = Vec::new();
+    let mut my_choice: Vec<char> = Vec::new();
 
-    // Build a vector of elf vector calories
-    if let Ok(lines) = utility::read_lines("./src/problems/prob01.txt") {
+    // Build the problem vectors
+    if let Ok(lines) = utility::read_lines("./src/problems/prob02a.txt") {
         for line in lines {
             if let Ok(ip) = line {
-                if ip.is_empty() {
-                    calories.push(_elf_calories.clone());
-                    _elf_calories = Vec::new();
-                } else {
-                    let _calorie = ip.parse::<i32>().unwrap();
-                    _elf_calories.push(_calorie)
+                let choices: Vec<&str> = ip.split(' ').collect();
+                match choices[0] {
+                    "A" => opponent_choice.push('R'),
+                    "B" => opponent_choice.push('P'),
+                    "C" => opponent_choice.push('S'),
+                    _ => println!("No Match"),
                 }
+                match choices[1] {
+                    "X" => my_choice.push('R'),
+                    "Y" => my_choice.push('P'),
+                    "Z" => my_choice.push('S'),
+                    _ => println!("No Match"),
+                }
+                
             }
         }
     }
-    
-    let mut calories_per_elf = calories
-                                        .clone()
-                                        .iter()
-                                        .map(|x| {x.iter().sum()})
-                                        .collect::<Vec<i32>>();
-        
-    let part_1_ans = *calories_per_elf
-                                        .clone()
-                                        .iter()
-                                        .max()
-                                        .unwrap();
 
+    let mut total_score: i32 = 0;
 
-    calories_per_elf.sort_by(|a, b| b.cmp(a));
+    for index in 0..my_choice.len() {
+        let my_round_score = determine_round_score(opponent_choice[index], my_choice[index]);
+        let my_choice_score: i32 = match my_choice[index] {
+            'R' => 1,
+            'P' => 2,
+            'S' => 3,
+            _ => 0,
+        };
 
-    let part_2_ans: i32 = calories_per_elf[0..3]
-                                    .to_vec()
-                                    .iter()
-                                    .sum();
+        total_score = total_score + my_round_score + my_choice_score;
+    }
 
+    println!("Part 1 ans: {}", total_score);
+}
 
-    println!("Part 1 ans: {}", part_1_ans);
-    println!("Part 2 ans: {}", part_2_ans);
+pub fn run_part_02b() {
+    println!("Running Day 02 - Part B");
+    let mut opponent_choice: Vec<char> = Vec::new();
+    let mut my_choice: Vec<char> = Vec::new();
+
+    // Build the problem vectors
+    if let Ok(lines) = utility::read_lines("./src/problems/prob02a.txt") {
+        for line in lines {
+            if let Ok(ip) = line {
+                let choices: Vec<&str> = ip.split(' ').collect();
+                match choices[0] {
+                    "A" => opponent_choice.push('R'),
+                    "B" => opponent_choice.push('P'),
+                    "C" => opponent_choice.push('S'),
+                    _ => println!("No Match"),
+                }
+                match choices[1] {
+                    "X" => {
+                        // Opponent Wins
+                        match *opponent_choice.last().unwrap() {
+                            'R' => my_choice.push('S'),
+                            'S' => my_choice.push('P'),
+                            'P' => my_choice.push('R'),
+                            _ => println!("Something's not right"),
+                        }
+                    },
+                    "Y" => {
+                        // Draw
+                        my_choice.push(*opponent_choice.last().unwrap());
+                    },
+                    "Z" => {
+                        // Opponent Loses
+                        match *opponent_choice.last().unwrap() {
+                            'R' => my_choice.push('P'),
+                            'S' => my_choice.push('R'),
+                            'P' => my_choice.push('S'),
+                            _ => println!("Something's not right"),
+                        }
+                    },
+                    _ => println!("No Match"),
+                }
+                
+            }
+        }
+    }
+
+    let mut total_score: i32 = 0;
+
+    for index in 0..my_choice.len() {
+        let my_round_score = determine_round_score(opponent_choice[index], my_choice[index]);
+        let my_choice_score: i32 = match my_choice[index] {
+            'R' => 1,
+            'P' => 2,
+            'S' => 3,
+            _ => 0,
+        };
+
+        total_score = total_score + my_round_score + my_choice_score;
+    }
+
+    println!("Part 2 ans: {}", total_score);
+}
+
+fn determine_round_score(opp_choice: char, my_choice: char) -> i32 {
+    if opp_choice == my_choice {
+        return 3;
+    } else {
+        if opp_choice == 'R' && my_choice == 'P' {
+            return 6;
+        } else if opp_choice == 'S' && my_choice == 'R' {
+            return 6;
+        } else if opp_choice == 'P' && my_choice == 'S' {
+            return 6;
+        } else {
+            return 0; // LOST
+        }
+    }
 }
