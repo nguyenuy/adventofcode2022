@@ -5,6 +5,7 @@ use crate::utility;
 pub fn run_part_04() {
     println!("Running Day 04");
     let mut fully_contain = 0;
+    let mut overlap: i32 = 0;
     if let Ok(lines) = utility::read_lines("./src/problems/prob04a.txt") {
         for line in lines {
             if let Ok(ip) = line {
@@ -25,10 +26,18 @@ pub fn run_part_04() {
                 } else {
                     fully_contain += 0;
                 }
+
+                let common_elements = first.intersection(&second).collect::<Vec<&u32>>();
+                if common_elements.len() > 0 {
+                    overlap = overlap + 1;
+                } else {
+                    overlap = overlap;
+                }
             }
         }
 
         println!("Part 1 ans: {}", fully_contain);
+        println!("Part 2 ans: {}", overlap);
     }
 }
 
