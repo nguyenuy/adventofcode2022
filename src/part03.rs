@@ -3,7 +3,7 @@ use std::collections::HashSet;
 use crate::utility;
 
 pub fn run_part_03() {
-    println!("Running Day 03 - Part A");
+    println!("Running Day 03");
     let mut rucksack: Vec<String> = Vec::new();
 
     // Build the problem vectors
